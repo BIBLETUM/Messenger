@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Messenger</string>
+    <string name="messenger">Messenger</string>
+    <string name="login">Логин:</string>
+    <string name="password">Пароль:</string>
+    <string name="login_button">LOGIN</string>
+    <string name="forgot_password"><u>Забыли пароль?</u></string>
+    <string name="register"><u>Зарегистрироваться</u></string>
 </resources>
