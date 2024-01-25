@@ -3,102 +3,66 @@ package com.example.messenger;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
+import androidx.lifecycle.ViewModelProvider;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
-    private FirebaseAuth mAuth;
+    private ViewModelMainActivity viewModelMainActivity;
+    private EditText editTextLogin;
+    private EditText editTextPassword;
+    private Button buttonLogin;
+    private TextView textViewPassReset;
+    private TextView textViewRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mAuth = FirebaseAuth.getInstance();
+        initViews();
 
-        String email = "pasha.remizov@mail.ru";
-        String password = "123456";
+        viewModelMainActivity = new ViewModelProvider(this).get(ViewModelMainActivity.class);
 
-//        mAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-//            @Override
-//            public void onSuccess(AuthResult authResult) {
-//                Log.d(TAG, "Registered");
-//            }
-//        });
+        buttonLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = editTextLogin.getText().toString().trim();
+                String password = editTextPassword.getText().toString().trim();
+                //todo
+            }
+        });
 
-        mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "Email sent.");
-                        }
-                    }
-                })
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d(TAG, "mess send");
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, e.getMessage());
-                    }
-                });
+        textViewPassReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = ActivityForgotPassword.newIntent(MainActivity.this);
+                startActivity(intent);
+            }
+        });
 
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
-//        if (currentUser == null) {
-//            Log.d(TAG, "null");
-//        } else {
-//            Log.d(TAG, "auth");
-//        }
-//
-//        mAuth.signOut();
-//
-//        String email = "aboba@mail.ru";
-//        String password = "123456";
-//
-//        mAuth.signInWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-//            @Override
-//            public void onSuccess(AuthResult authResult) {
-//                FirebaseUser currentUser = mAuth.getCurrentUser();
-//                if (currentUser == null) {
-//                    Log.d(TAG, "null");
-//                } else {
-//                    Log.d(TAG, "auth");
-//                }
-//            }
-//        });
-//
-//        mAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-//            @Override
-//            public void onSuccess(AuthResult authResult) {
-//                FirebaseUser currentUser = mAuth.getCurrentUser();
-//                if (currentUser == null) {
-//                    Log.d(TAG, "userNull");
-//                } else {
-//                    Log.d(TAG, "userNN");
-//                }
-//            }
-//        }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//                Log.d(TAG, e.getMessage());
-//                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
-
+        textViewRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = RegistrationActivity.newIntent(MainActivity.this);
+                startActivity(intent);
+            }
+        });
     }
+
+    private void initViews() {
+        editTextLogin = findViewById(R.id.editTextLogin);
+        editTextPassword = findViewById(R.id.editTextPassword);
+        buttonLogin = findViewById(R.id.buttonLogin);
+        textViewPassReset = findViewById(R.id.textViewPassReset);
+        textViewRegister = findViewById(R.id.textViewRegister);
+    }
+
     public static Intent newIntent(Context context) {
         return new Intent(context, MainActivity.class);
     }
