@@ -4,6 +4,14 @@
     <string name="login">Логин:</string>
     <string name="password">Пароль:</string>
     <string name="login_button">LOGIN</string>
-    <string name="forgot_password"><u>Забыли пароль?</u></string>
-    <string name="register"><u>Зарегистрироваться</u></string>
+    <string name="forgot_password_"><u>Забыли пароль?</u></string>
+    <string name="forgot_password">Забыли пароль?</string>
+    <string name="register_"><u>Зарегистрироваться</u></string>
+    <string name="logout">Выйти</string>
+    <string name="register">Зарегистрироваться</string>
+    <string name="name">Имя</string>
+    <string name="last_name">Фамилия</string>
+    <string name="how_old_are_you">Сколько вам лет?</string>
+    <string name="sign_up">SIGN UP</string>
+    <string name="reset_password">Восстановить пароль</string>
 </resources>
