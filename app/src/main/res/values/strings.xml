@@ -14,4 +14,5 @@
     <string name="how_old_are_you">Сколько вам лет?</string>
     <string name="sign_up">SIGN UP</string>
     <string name="reset_password">Восстановить пароль</string>
+    <string name="succes_sent_reset_link">Ссылка для восстановления успешно отправлена</string>
 </resources>
