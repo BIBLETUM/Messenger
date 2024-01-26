@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(FirebaseUser firebaseUser) {
                 if (firebaseUser != null) {
-                    Intent intent = UsersActivity.newIntent(MainActivity.this, firebaseUser);
+                    Intent intent = UsersActivity.newIntent(MainActivity.this);
                     startActivity(intent);
                     finish();
                 }

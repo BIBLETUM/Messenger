@@ -1,24 +1,30 @@
 package com.example.messenger;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class UsersActivity extends AppCompatActivity {
-    private final static String EXTRA_USER = "user";
     private FirebaseUser user;
     private ViewModelUsers viewModelUsers;
+    private RecyclerView recyclerViewUsers;
+    private UsersAdepter usersAdepter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,20 +34,29 @@ public class UsersActivity extends AppCompatActivity {
         viewModelUsers = new ViewModelProvider(this).get(ViewModelUsers.class);
 
         observeViewModel();
-       // user = (FirebaseUser) getIntent().getSerializableExtra(EXTRA_USER);
 
-        //Toast.makeText(this, user.getEmail().toString(), Toast.LENGTH_SHORT).show();
+        recyclerViewUsers = findViewById(R.id.recyclerViewUsers);
+        usersAdepter = new UsersAdepter();
+        recyclerViewUsers.setAdapter(usersAdepter);
+
+        viewModelUsers.loadUsers();
     }
 
-    private void observeViewModel(){
+    private void observeViewModel() {
         viewModelUsers.getUser().observe(this, new Observer<FirebaseUser>() {
             @Override
             public void onChanged(FirebaseUser firebaseUser) {
-                if (firebaseUser == null){
+                if (firebaseUser == null) {
                     Intent intent = MainActivity.newIntent(UsersActivity.this);
                     startActivity(intent);
                     finish();
                 }
+            }
+        });
+        viewModelUsers.getUsers().observe(this, new Observer<List<User>>() {
+            @Override
+            public void onChanged(List<User> users) {
+                usersAdepter.setUsers(users);
             }
         });
     }
@@ -54,15 +69,14 @@ public class UsersActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == R.id.menuItemLogOut){
+        if (item.getItemId() == R.id.menuItemLogOut) {
             viewModelUsers.logOut();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public static Intent newIntent(Context context, FirebaseUser user){
+    public static Intent newIntent(Context context) {
         Intent intent = new Intent(context, UsersActivity.class);
-        //intent.putExtra(EXTRA_USER, user);
         return intent;
     }
 }
