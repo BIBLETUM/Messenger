@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ViewModelUsers extends AndroidViewModel {
-    private static final String TAG = "ViewModelUsers";
     private MutableLiveData<FirebaseUser> user = new MutableLiveData<>();
     private MutableLiveData<List<User>> users = new MutableLiveData<>();
     private FirebaseDatabase firebaseDatabase;
@@ -46,7 +45,13 @@ public class ViewModelUsers extends AndroidViewModel {
     public LiveData<FirebaseUser> getUser() {
         return user;
     }
-
+    public void setUserOnline(boolean isOnline) {
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        if (firebaseUser == null){
+            return;
+        }
+        databaseReference.child(firebaseUser.getUid()).child("status").setValue(isOnline);
+    }
     public void loadUsers(){
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -75,6 +80,7 @@ public class ViewModelUsers extends AndroidViewModel {
         });
     }
     public void logOut() {
+        setUserOnline(false);
         mAuth.signOut();
     }
 }

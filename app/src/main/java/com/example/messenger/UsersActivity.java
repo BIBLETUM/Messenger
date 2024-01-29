@@ -13,23 +13,23 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class UsersActivity extends AppCompatActivity {
+    private final static String EXTRA_CURID = "currentUserId";
     private FirebaseUser user;
     private ViewModelUsers viewModelUsers;
     private RecyclerView recyclerViewUsers;
     private UsersAdepter usersAdepter;
+    private String currentUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users);
+
+        currentUserId = getIntent().getStringExtra(EXTRA_CURID);
 
         viewModelUsers = new ViewModelProvider(this).get(ViewModelUsers.class);
 
@@ -38,6 +38,13 @@ public class UsersActivity extends AppCompatActivity {
         recyclerViewUsers = findViewById(R.id.recyclerViewUsers);
         usersAdepter = new UsersAdepter();
         recyclerViewUsers.setAdapter(usersAdepter);
+        usersAdepter.setOnUserClickListener(new UsersAdepter.OnUserClickListener() {
+            @Override
+            public void onUserClick(User user) {
+                Intent intent = ChatActivity.newIntent(UsersActivity.this, currentUserId, user.getId());
+                startActivity(intent);
+            }
+        });
 
         viewModelUsers.loadUsers();
     }
@@ -75,8 +82,21 @@ public class UsersActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static Intent newIntent(Context context) {
+    @Override
+    protected void onResume() {
+        viewModelUsers.setUserOnline(true);
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        viewModelUsers.setUserOnline(false);
+        super.onPause();
+    }
+
+    public static Intent newIntent(Context context, String currentUserId) {
         Intent intent = new Intent(context, UsersActivity.class);
+        intent.putExtra(EXTRA_CURID, currentUserId);
         return intent;
     }
 }
